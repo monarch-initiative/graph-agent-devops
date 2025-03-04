@@ -4,14 +4,15 @@ ssh_keys:
 
 instance:
     tags:
-       Name: REPLACE_ME  # This will be the tag used in AWS
+       Name: ga-production-REPLACE_ME_WITH_DATE
     instance_type: t2.large
     use_elastic_ip: True
 
     # Set the fqdn if you want the record to be created  and make sure you have the right zone id. (See AWS console)
     # The created record will be of type A and will be populated with the public ip address of the aws instance
-    dns_record_name: "REPLACE_ME"
-    dns_zone_id: "REPLACE_ME" # see documentation for the zone id
+    dns_record_name: "ga-production-REPLACE_ME_WITH_DATE.curategpt.io"
+    # For curategpt.io
+    dns_zone_id: "Z05698141GO0UMS9STF8P"
 
     disk_size: 200
     open_ports:

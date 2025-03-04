@@ -1,6 +1,6 @@
 variable "tags" {
   type = map
-  default = { Name = "test-amigo" }
+  default = { Name = "test-graph-agent-devops" }
 }
 
 variable "instance_type" {
@@ -12,7 +12,7 @@ variable "disk_size" {
 }
 
 variable "public_key_path" {
-  default = "/tmp/go-ssh.pub"
+  default = "/tmp/ga-ssh.pub"
 }
 
 variable "use_elastic_ip" {
@@ -23,7 +23,7 @@ variable "use_elastic_ip" {
 
 provider "aws" {
   region = "us-east-1"
-  shared_credentials_files = [ "/tmp/go-aws-credentials" ]
+  shared_credentials_files = [ "/tmp/ga-aws-credentials" ]
   profile = "default"
 }
 

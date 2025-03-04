@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket  = "REPLACE_ME_GA_S3_STATE_STORE"
+    bucket  = "ga-workspace"
     profile = "default"
     key     = "ga/terraform.tfstate"
     region  = "us-east-1"

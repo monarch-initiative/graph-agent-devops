@@ -73,39 +73,67 @@ emacs /tmp/ga-aws-credentials
 
 "Initializing" a Terraform backend connects your local Terraform instantiation to a workspace; we are using S3 as the shared workspace medium (Terraform has others as well). This workspace will contain information on EC2 instances, network info, etc.; you (and other developers in the future) can discover and manipulate these states, bringing servers and services up and down in a shared and coordinated way. These Terraform backends are an arbitrary bundle and can be grouped as needed. In general, the production systems should all use the same pre-coordinated workspace, but you may create new ones for experimentation, etc.
 
-Typically, the name of the workspace is `ga-workspace-` + the name of the service; i.e. `ga-workspace-api` for the use case here.
+Typically, the name of the workspace is `ga-workspace-` + the name of the service; i.e. `ga-workspace` for the use case here.
 
 ```bash
-
 cp ./production/backend.tf.sample ./aws/backend.tf
+```
 
-# Replace the REPLACE_ME_GOAPI_S3_STATE_STORE with the appropriate workspace (state store ~= workspace); so `ga-workspace-api`.
+Replace the REPLACE\_ME\_GA\_S3\_STATE\_STORE with the appropriate workspace name: `ga-workspace`.
+
+```bash
 emacs ./aws/backend.tf
+```
 
-# Use the AWS CLI to make sure you have access to the terraform s3 backend bucket
+Use the AWS CLI to make sure you have access to the terraform s3 backend bucket
+
+```bash
 export AWS_SHARED_CREDENTIALS_FILE=/tmp/ga-aws-credentials
+```
 
-# Check connection to S3 bucket.
-aws s3 ls s3://ga-workspace-api
+Check connection to S3 "workspace" bucket.
 
-# Initialize (if it doesn't work, we fail):
-ga-deploy -init --working-directory aws -verbose
+```bash
+aws s3 ls s3://ga-workspace
+```
 
-# Use these commands to figure out the name of an existing workspace if any. The name should have a pattern `ga-api-production-YYYY-MM-DD`
-ga-deploy --working-directory aws -list-workspaces -verbose
+Proceed with Terraform initialization; if it doesn't work, we fail):
+
+```bash
+go-deploy -init --working-directory aws -verbose
+```
+
+Use these commands to figure out the name of an existing workspace if any. The names should have a pattern `ga-production-YYYY-MM-DD` or `default`.
+
+```bash
+go-deploy --working-directory aws -list-workspaces -verbose
 ```
 
 7. Provision new instance on AWS, for potential production use:
 
-Create a (new) production workspace using the following namespace pattern `ga-api-production-YYYY-MM-DD`; e.g.: `ga-api-production-2023-01-30`:
+Create a (new) production workspace using the following namespace pattern `ga-production-YYYY-MM-DD`; e.g.: `ga-production-2025-03-03`:
 
 ```bash
 cp ./production/config-instance.yaml.sample config-instance.yaml
-emacs config-instance.yaml  # verify the location of the SSH keys for your AWS instance: /tmp/ga-ssh
-emacs aws/main.tf # technically optional; verify the location of the public ssh key in `aws/main.tf`
 ```
 
-As well, give a human-readable string for the instance/tags/name (EC2 instance name tag), make it the same at the namespace pattern above; i.e. `ga-api-production-2024-01-22`:
+Verify the location of the SSH keys for your AWS instance: /tmp/ga-ssh
+
+```bash
+emacs config-instance.yaml
+```
+
+Technically optional; verify the location of the public ssh key in `aws/main.tf`
+
+```bash
+emacs aws/main.tf
+```
+
+Next, give a human-readable string for the instance/tags/name (EC2 instance `Name` tag) for REPLACE\_ME\_WITH\_DATE, make it the same at the namespace pattern above; i.e. `ga-production-2035-03-03`:
+
+You will also need to change `dns_record_name` in a similar way.
+
+Finally, if you want to change the size of the machine (`instance_type`), this is the time/place to do it.
 
 ```
 emacs config-instance.yaml
@@ -113,32 +141,35 @@ emacs config-instance.yaml
 
 8. Test the deployment
 
-`REPLACE_ME_WITH_S3_WORKSPACE_NAME` would be something like `ga-api-production-<TODAYS_DATE>`; i.e. `ga-api-production-2024-01-22`
+For the next command, `REPLACE_ME_WITH_DATE` should be something like YYYY-MM-DD; giving a final full workspace name of something like `ga-production-2025-03-03`.
+
+Test configuration:
 
 ```bash
-ga-deploy --workspace REPLACE_ME_WITH_S3_WORKSPACE_NAME --working-directory aws -verbose -dry-run --conf config-instance.yaml
+go-deploy --workspace ga-production-REPLACE_ME_WITH_DATE --working-directory aws -verbose -dry-run --conf config-instance.yaml
 ```
 
 9. Deploy
 
 Deploy command:
+
 ```bash
-ga-deploy --workspace REPLACE_ME_WITH_S3_WORKSPACE_NAME --working-directory aws -verbose --conf config-instance.yaml
+go-deploy --workspace go-production-REPLACE_ME_WITH_DATE --working-directory aws -verbose --conf config-instance.yaml
 ```
 
 10. Checking what we have done
 
 Just to check, ask it to display what it just did (display the Terraform state):
 ```
-ga-deploy --workspace REPLACE_ME_WITH_S3_WORKSPACE_NAME --working-directory aws -verbose -show
+go-deploy --workspace ga-production-REPLACE_ME_WITH_DATE --working-directory aws -verbose -show
 ```
 
 Finally, just show the IP address of the AWS instance:
 ```
-ga-deploy --workspace REPLACE_ME_WITH_S3_WORKSPACE_NAME --working-directory aws -verbose -output
+go-deploy --workspace REPLACE_ME_WITH_S3_WORKSPACE_NAME --working-directory aws -verbose -output
 ```
 
-**NOTE**: write down the IP address of the AWS instance that is created. This can also be found in `REPLACE_ME_WITH_S3_WORKSPACE_NAME.cfg` (e.g. ga-api-production-YYYY-MM-DD.cfg).
+**NOTE**: write down the IP address of the AWS instance that is created. This can also be found in `REPLACE_ME_WITH_S3_WORKSPACE_NAME.cfg` (e.g. ga-production-YYYY-MM-DD.cfg).
 
 Useful details for troubleshooting:
 These commands will produce an IP address in the resulting `inventory.json` file.
@@ -147,12 +178,12 @@ The previous command creates Terraform "tfvars". These variables override the va
 If you need to check what you have just done, here are some helpful Terraform commands:
 
 ```bash
-cat REPLACE_ME_WITH_S3_WORKSPACE_NAME.tfvars.json # e.g, ga-api-production-YYYY-MM-DD.tfvars.json
+cat REPLACE_ME_WITH_S3_WORKSPACE_NAME.tfvars.json # e.g, ga-production-YYYY-MM-DD.tfvars.json
 ```
 
 The previous command creates an ansible inventory file.
 ```bash
-cat REPLACE_ME_WITH_S3_WORKSPACE_NAME-inventory.cfg  # e.g, ga-api-production-YYYY-MM-DD-inventory
+cat REPLACE_ME_WITH_S3_WORKSPACE_NAME-inventory.cfg  # e.g, ga-production-YYYY-MM-DD-inventory
 ```
 
 Useful Terraform commands to check what you have just done
@@ -163,7 +194,7 @@ terraform -chdir=aws show             # current state deployed ...
 terraform -chdir=aws output           # shows public ip of aws instance
 ```
 
-## Configuring and deploying software (grapg-agent-devops) _stack_:
+## Configuring and deploying software (graph-agent-devops) _stack_:
 
 These commands continue to be run in the dockerized development environment.
 
@@ -197,7 +228,7 @@ export ANSIBLE_HOST_KEY_CHECKING=False
 Run the deployment of the stack within the instance:
 
 ```bash
-ga-deploy --workspace REPLACE_ME_WITH_S3_WORKSPACE_NAME --working-directory aws -verbose --conf config-stack.yaml
+go-deploy --workspace REPLACE_ME_WITH_S3_WORKSPACE_NAME --working-directory aws -verbose --conf config-stack.yaml
 ```
 
 ## Testing deployment (within the dev image):
@@ -249,7 +280,7 @@ docker inspect --format "{{json .State.Health }}" graph-agent-devops
 ```bash
 # Destroy Using Tool.
 # Make sure you point to the correct workspace before destroying the stack by using the -show command or the -output command
-ga-deploy --workspace REPLACE_ME_WITH_S3_WORKSPACE_NAME --working-directory aws -verbose -destroy
+go-deploy --workspace REPLACE_ME_WITH_S3_WORKSPACE_NAME --working-directory aws -verbose -destroy
 ```
 
 ```bash
