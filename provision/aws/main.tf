@@ -54,7 +54,7 @@ module "base" {
   source = "git::https://github.com/geneontology/devops-aws-go-instance.git?ref=V3.1"
   instance_type = var.instance_type
   ami = var.ami
-  use_elastic_ip = var.use_elastic_ip 
+  use_elastic_ip = var.use_elastic_ip
   dns_record_name = var.dns_record_name
   dns_zone_id = var.dns_zone_id
   public_key_path = var.public_key_path
@@ -69,4 +69,27 @@ output "dns_records" {
 
 output "public_ip" {
    value                  = module.base.public_ip
+}
+
+resource "aws_security_group" "sg-c2463bde" {
+  vpc_id = var.vpc_id
+  tags   = var.tags
+
+  dynamic "ingress" {
+      for_each = var.open_ports
+
+      content {
+        from_port   = ingress.value
+        to_port     = ingress.value
+        protocol    = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+      }
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
