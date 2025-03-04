@@ -10,7 +10,7 @@ Repository for reusable "simple" devops for the graph agent.
 
 ## Configuring and deploying EC2 _instances_:
 
-From step "3", all steps will be completed in a dockerized development environment. The first two commands are for preparation.
+From step "5", all steps will be completed in a dockerized development environment. The first two commands are for preparation, "3" and "4" establish this repo and ssh credentials in the docker environment.
 
 1. Gather _your_ AWS credentials:
 
@@ -52,7 +52,7 @@ You should now have the following in your image:
 /tmp/ga-ssh
 /tmp/ga-ssh.pub
 ```
-Make sure they have the right perms to be used:
+Make sure they have the right perms to be used in the docker image:
 ```
 chmod 600 /tmp/ga-ssh*
 ```
