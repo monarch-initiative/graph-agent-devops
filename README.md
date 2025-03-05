@@ -166,24 +166,23 @@ go-deploy --workspace ga-production-REPLACE_ME_WITH_DATE --working-directory aws
 
 Finally, just show the IP address of the AWS instance:
 ```
-go-deploy --workspace REPLACE_ME_WITH_S3_WORKSPACE_NAME --working-directory aws -verbose -output
+go-deploy --workspace ga-production-REPLACE_ME_WITH_DATE --working-directory aws -verbose -output
 ```
 
-**NOTE**: write down the IP address of the AWS instance that is created. This can also be found in `REPLACE_ME_WITH_S3_WORKSPACE_NAME.cfg` (e.g. ga-production-YYYY-MM-DD.cfg).
+## Troubleshooting:
 
-Useful details for troubleshooting:
 These commands will produce an IP address in the resulting `inventory.json` file.
 The previous command creates Terraform "tfvars". These variables override the variables in `aws/main.tf`
 
 If you need to check what you have just done, here are some helpful Terraform commands:
 
 ```bash
-cat REPLACE_ME_WITH_S3_WORKSPACE_NAME.tfvars.json # e.g, ga-production-YYYY-MM-DD.tfvars.json
+cat ga-production-REPLACE_ME_WITH_DATE.tfvars.json
 ```
 
 The previous command creates an ansible inventory file.
 ```bash
-cat REPLACE_ME_WITH_S3_WORKSPACE_NAME-inventory.cfg  # e.g, ga-production-YYYY-MM-DD-inventory
+cat ga-production-REPLACE_ME_WITH_DATE-inventory.cfg
 ```
 
 Useful Terraform commands to check what you have just done
@@ -194,145 +193,32 @@ terraform -chdir=aws show             # current state deployed ...
 terraform -chdir=aws output           # shows public ip of aws instance
 ```
 
-## Configuring and deploying software (graph-agent-devops) _stack_:
-
-These commands continue to be run in the dockerized development environment.
-
-**POSSIBLE CUT START**
-```bash
-* replace "REPLACE_ME" values in config-instance.yaml for dns_record_name and dns_zone_id,
-dns_zone_id should be "Z04640331A23NHVPCC784" and dns_record_name is the FQDN plus the REPLACE_ME_WITH_TERRAFORM_BACKEND, eg. api-production-2024-08-21.geneontology.org
-* Location of SSH keys may need to be replaced after copying config-stack.yaml.sample
-* S3 credentials are placed in a file using the format described above
-* S3 uri if SSL is enabled. Location of SSL certs/key
-* QoS mitigation if QoS is enabled
-* Use the same workspace name as in the previous step
-**POSSIBLE CUT END**
-
-Let's ready the the instance, starting by editing the config:
-```bash
-cp ./production/config-stack.yaml.sample ./config-stack.yaml
-emacs ./config-stack.yaml
-```
-Change these in emacs:
-* `S3_BUCKET`: "ga-service-logs-api" (as above)
-* `S3_SSL_CERTS_LOCATION`: "s3://ga-service-lockbox/geneontology.org.tar.gz"; this is generally of the form: ga-service-lockbox/_TLD_.tar.gz";
-* `fastapi_host`: "api-test.geneontology.org"; (must be a FQDN)
-* `fastapi_tag`: E.g. "0.2.0"; this should be the Dockerhub _tagged_ version of the API (which is how we deploy within the image), which is conincidentally the GitHub version of the API _sans the final "v"_. <- important point!
-
-Finally, get ansible ready:
-```
-export ANSIBLE_HOST_KEY_CHECKING=False
-````
-
-Run the deployment of the stack within the instance:
+Access graph-agent-devops instance from the CLI by ssh'ing into the newly provisioned EC2 instance:
 
 ```bash
-go-deploy --workspace REPLACE_ME_WITH_S3_WORKSPACE_NAME --working-directory aws -verbose --conf config-stack.yaml
-```
-
-## Testing deployment (within the dev image):
-
-1. Access graph-agent-devops instance from the CLI by ssh'ing into the newly provisioned EC2 instance:
-```
 ssh -i /tmp/ga-ssh ubuntu@IP_ADDRESS
 ```
 
-3. Access graph-agent-devops from a browser:
+## Destroy instance and other destructive things:
 
-+We use health checks in the `docker-compose` file.+ (where to put this?)
-
-Use the graph-agent-devops CNAME name. https://{fastapi_host}/docs
-
-3. Debugging (in the AWS instance):
-
-* Use -dry-run and copy and paste the command and execute it manually
-* ssh to the machine; the username is ubuntu. Try using DNS names to make sure they are fine.
+Destroy using tool: make sure you point to the correct workspace before destroying the stack by using the -show command or the -output command.
 
 ```bash
-docker-compose -f stage_dir/docker-compose.yaml ps
-docker-compose -f stage_dir/docker-compose.yaml down # whenever you make any changes
-docker-compose -f stage_dir/docker-compose.yaml up -d
-docker-compose -f stage_dir/docker-compose.yaml logs -f
+go-deploy --workspace ga-production-REPLACE_ME_WITH_DATE --working-directory aws -verbose -destroy
 ```
 
-4. Testing LogRotate:
+Destroy manually: make sure you point to the correct workspace before destroying the stack.
 
 ```bash
-docker exec -u 0 -it apache_fastapi bash # enter the container
-cat /opt/credentials/s3cfg
-
-echo $S3_BUCKET
-aws s3 ls s3://$S3_BUCKET
-logrotate -v -f /etc/logrotate.d/apache2 # Use -f option to force log rotation.
-cat /tmp/logrotate-to-s3.log # make sure uploading to s3 was fine
-```
-
-5. Testing Health Check:
-
-```sh
-docker inspect --format "{{json .State.Health }}" graph-agent-devops
-```
-
-
-## Destroy Instance and other destructive things:
-
-```bash
-# Destroy Using Tool.
-# Make sure you point to the correct workspace before destroying the stack by using the -show command or the -output command
-go-deploy --workspace REPLACE_ME_WITH_S3_WORKSPACE_NAME --working-directory aws -verbose -destroy
-```
-
-```bash
-# Destroy Manually
-# Make sure you point to the correct workspace before destroying the stack.
-
 terraform -chdir=aws workspace list
 terraform -chdir=aws workspace show # shows the name of the current workspace
 terraform -chdir=aws show           # shows the state you are about to destroy
 terraform -chdir=aws destroy        # You would need to type Yes to approve.
-
-# Now delete the workspace.
-
-terraform -chdir=aws workspace select default # change to default workspace
-terraform -chdir=aws workspace delete <NAME_OF_WORKSPACE_THAT_IS_NOT_DEFAULT>  # delete workspace.
 ```
 
-### Helpful commands for the docker container used as a development environment (ga-dev):
-
-1. start the docker container `ga-dev` in interactive mode.
+Now delete the workspace.
 
 ```bash
-docker run --rm --name ga-dev -it geneontology/go-devops-base:tools-jammy-0.4.4  /bin/bash
-```
-
-In the command above we used the `--rm` option which means the container will be deleted when you exit.
-If that is not the intent and you want to delete it later at your own convenience. Use the following `docker run` command.
-
-```bash
-docker run --name ga-dev -it geneontology/go-devops-base:tools-jammy-0.4.4  /bin/bash
-```
-
-2. To exit or stop the container:
-
-```bash
-docker stop ga-dev                   # stop container with the intent of restarting it. This is equivalent to `exit` inside the container.
-docker start -ia ga-dev              # restart and attach to the container.
-docker rm -f ga-dev                  # remove it for good.
-```
-
-3. Use `docker cp` to copy these credentials to /tmp:
-
-```bash
-docker cp /tmp/ga-aws-credentials ga-dev:/tmp/
-docker cp /tmp/ga-ssh ga-dev:/tmp
-docker cp /tmp/ga-ssh.pub ga-dev:/tmp
-```
-
-within the docker image:
-
-```bash
-chown root /tmp/ga-*
-chgrp root /tmp/ga-*
-chmod 400 /tmp/ga-ssh
+terraform -chdir=aws workspace select default # change to default workspace--cannot delete workspace that you are "in"
+terraform -chdir=aws workspace delete ga-production-YYYY-MM-DD
 ```

@@ -61,6 +61,8 @@ module "base" {
   tags = var.tags
   open_ports = var.open_ports
   disk_size = var.disk_size
+  vpc_id = "vpc-b4a2c8c9"
+  subnet_id = "subnet-bb1b3f9a"
 }
 
 output "dns_records" {
