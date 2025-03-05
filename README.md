@@ -133,7 +133,7 @@ Next, give a human-readable string for the instance/tags/name (EC2 instance `Nam
 
 You will also need to change `dns_record_name` in a similar way.
 
-Finally, if you want to change the size of the machine (`instance_type`), this is the time/place to do it.
+Finally, if you want to change the size of the machine (`instance_type`) or the size of the attached storage (`disk_size`), this is the time/place to do it.
 
 ```
 emacs config-instance.yaml
