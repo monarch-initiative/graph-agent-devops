@@ -154,7 +154,7 @@ go-deploy --workspace ga-production-REPLACE_ME_WITH_DATE --working-directory aws
 Deploy command:
 
 ```bash
-go-deploy --workspace go-production-REPLACE_ME_WITH_DATE --working-directory aws -verbose --conf config-instance.yaml
+go-deploy --workspace ga-production-REPLACE_ME_WITH_DATE --working-directory aws -verbose --conf config-instance.yaml
 ```
 
 10. Checking what we have done
