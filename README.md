@@ -2,6 +2,29 @@
 
 Repository for reusable "simple" devops for the graph agent.
 
+## Overview (what is this?)
+
+The goal of this devops setup is to:
+
+- Create a centralized and "sharable" description of machines and
+  related services in AWS.
+- Have this shared description be the mechanism for change in AWS.
+- Create an environment and set of tools to manipulate this
+  description, which is then relfected in the machines and services
+  available in AWS.
+
+In other words: you are creating a devops envirnment, "joining" a
+shared workspace, then adding and removing machines, storage, and
+networks in this shared workspace.
+
+Currently, when using this devops setup, you are manipulating the
+following things in AWS as a unit:
+
+- an EC2 instance
+- an EBS (disk for EC2 instances)
+- a public DNS entry pointing to the instance above
+- TODO
+
 ## Prerequisites:
 
 - Docker
