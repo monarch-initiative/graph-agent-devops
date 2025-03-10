@@ -29,7 +29,7 @@ provider "aws" {
 
 variable "open_ports" {
   type = list
-  default = [22, 80]
+  default = [22, 80, 443]
 }
 
 // Standard Ubuntu 24.04 LTS.
