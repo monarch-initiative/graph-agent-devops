@@ -32,9 +32,9 @@ variable "open_ports" {
   default = [22, 80]
 }
 
-// custom ubuntu jammy ami with docker, docker-compose, aws, python, pip installed
+// Standard Ubuntu 24.04 LTS.
 variable "ami" {
-  default = "ami-019eb5c97ad39d701"
+  default = "ami-04b4f1a9cf54c11d0"
 }
 
 // optional will be created if value is not an menty string
