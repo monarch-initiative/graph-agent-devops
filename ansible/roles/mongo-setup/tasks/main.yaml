@@ -39,7 +39,7 @@
   shell: echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu noble/mongodb-org/8.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-8.0.list
 - name: apt-get update
   apt: update_cache=yes
-- name: get basic packages for mongo
+- name: get mongo
   apt: pkg={{ item }} state=present
   with_items:
     - mongodb-org

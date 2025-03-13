@@ -216,6 +216,24 @@ Access graph-agent-devops instance from the CLI by ssh'ing into the newly provis
 ssh -i /tmp/ga-ssh ubuntu@IP_ADDRESS
 ```
 
+## Software installation
+
+```bash
+cd ../ansible
+```
+
+In `hosts`, replace `-REPLACE_ME_WITH_IP` with the IP address of your new instalce from above.
+
+```bash
+emacs hosts
+```
+
+Setup software with:
+
+```bash
+ansible-playbook mongo-setup-for-agent.yaml --inventory=hosts --private-key="/tmp/ga-ssh"
+```
+
 ## Troubleshooting
 
 These commands will produce an IP address in the resulting `inventory.json` file.
