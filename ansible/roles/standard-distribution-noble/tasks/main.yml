@@ -19,8 +19,6 @@
     - software-properties-common
     - apt-transport-https
     - build-essential
-    ## Still need python 2 for ansible.
-    - python
     ## Odds and ends utilities.
     - apt-show-versions
     - byobu
