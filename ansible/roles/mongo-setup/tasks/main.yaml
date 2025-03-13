@@ -1,0 +1,47 @@
+####
+#### Get MongoDB up on port 27017.
+####
+---
+# ## Setup minio supervisord.
+# - name: install supervisor
+#   apt: pkg=supervisor state=present
+# - name: supervisor conf for minio
+#   copy: "src=supervisor-minio dest=/etc/supervisor/conf.d/minio.conf owner=root group=root mode=0644"
+# - name: supervisor minio "stop"
+#   supervisorctl: name=minio state=stopped
+#   ignore_errors: yes
+# ## Get minio itself and get into pre-determined layout.
+# - name: establish minio bin
+#   file: path=/srv/minio/bin state=directory owner=www-data group=www-data mode=0775
+# - name: establish minio data
+#   file: path=/srv/minio/data state=directory owner=www-data group=www-data mode=0775
+# - name: get latest release of minio
+#   get_url: url=https://dl.minio.io/server/minio/release/linux-amd64/minio dest=/srv/minio/bin/minio
+# - name: set executable
+#   file:
+#     path: /srv/minio/bin/minio
+#     owner: www-data
+#     group: www-data
+#     mode: 0755
+# - name: get config to proper location from go-internal
+#   copy: "src=~/local/src/git/go-internal/aws-minio/minio-server-config.json dest=/srv/minio/config/config.json owner=www-data group=www-data mode=0600"
+# ## Update supervisor with new data and restart.
+# - name: supervisor update and "restarted"
+#   supervisorctl: name=minio state=restarted
+- name: get basic packages for mongo
+  apt: pkg={{ item }} state=present
+  with_items:
+    - gnupg
+    - curl
+- name: get mongo key
+  shell: curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg --dearmor
+- name: add source
+  shell: echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu noble/mongodb-org/8.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-8.0.list
+- name: apt-get update
+  apt: update_cache=yes
+- name: get basic packages for mongo
+  apt: pkg={{ item }} state=present
+  with_items:
+    - mongodb-org
+- name: set mongodb to start on restart
+  shell: systemctl enable mongod
