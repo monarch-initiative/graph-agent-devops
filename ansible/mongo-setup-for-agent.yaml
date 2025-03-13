@@ -1,0 +1,14 @@
+####
+#### Install Mongo and setup necessities.
+####
+#### This playbook is for Ubuntu 24.04 LTS.
+####
+#remote_user: "{{ target_user | default('bbop') }}"
+---
+- hosts: "{{ target_host | default('graph-agent-production') }}"
+  #remote_user: bbop
+  remote_user: "{{ target_user | default('ubuntu') }}"
+  become: yes
+  roles:
+    ## Package substrait.
+    - standard-distribution-noble
