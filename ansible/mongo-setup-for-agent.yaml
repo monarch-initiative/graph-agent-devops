@@ -11,7 +11,7 @@
   become: yes
   roles:
     ## Package substrait.
-    #- standard-distribution-noble
+    - standard-distribution-noble
     ## Package substrait.
-    - mongo-setup
+    - role: mongo-setup
       mongodb_cli_password: "{{ mongodb_cli_password }}"
