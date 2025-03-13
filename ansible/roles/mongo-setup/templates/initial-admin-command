@@ -1,0 +1,11 @@
+use admin
+db.createUser(
+  {
+    user: "bbopadmin",
+    pwd: "{{ mongodb_cli_password }}",
+    roles: [
+      { role: "userAdminAnyDatabase", db: "admin" },
+      { role: "readWriteAnyDatabase", db: "admin" }
+    ]
+  }
+)
