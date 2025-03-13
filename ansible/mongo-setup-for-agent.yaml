@@ -14,3 +14,4 @@
     #- standard-distribution-noble
     ## Package substrait.
     - mongo-setup
+      mongodb_cli_password: "{{ mongodb_cli_password }}"

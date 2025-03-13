@@ -228,10 +228,10 @@ In `hosts`, replace `-REPLACE_ME_WITH_IP` with the IP address of your new instal
 emacs hosts
 ```
 
-Setup software with:
+Replacing BBOP\_HIDDEN\_TEXT with the appropriate text, setup software with:
 
 ```bash
-ansible-playbook mongo-setup-for-agent.yaml --inventory=hosts --private-key="/tmp/ga-ssh"
+ansible-playbook mongo-setup-for-agent.yaml --inventory=hosts --private-key="/tmp/ga-ssh" -e mongodb_cli_password=BBOP_HIDDEN_TEXT
 ```
 
 ## Troubleshooting
