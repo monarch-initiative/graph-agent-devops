@@ -222,7 +222,7 @@ ssh -i /tmp/ga-ssh ubuntu@IP_ADDRESS
 cd ../ansible
 ```
 
-In `hosts`, replace `-REPLACE_ME_WITH_IP` with the IP address of your new instalce from above.
+In `hosts`, replace `REPLACE_ME_WITH_IP` with the IP address of your new instalce from above.
 
 ```bash
 emacs hosts
