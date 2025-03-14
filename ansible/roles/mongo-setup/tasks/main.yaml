@@ -48,3 +48,7 @@
   copy: src=mongod.conf dest=/etc/mongod.conf owner=root group=root mode=0644
 - name: start mongo again
   shell: systemctl start mongod
+- name: delete secrets
+  ansible.builtin.file:
+    state: absent
+    path: /tmp/initial-admin-command.js
