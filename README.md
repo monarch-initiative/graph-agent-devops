@@ -27,6 +27,12 @@ following things in AWS as a unit:
 - a dynamic security group (using default VPC, etc.)
 - a dynamic key pair
 
+In the EC2 instance, you will be creating:
+
+- An Ubuntu 24.04 LTS release
+- MongoDB 8.x release
+- Simple SCRAM setup
+
 ## Prerequisites:
 
 - Docker
@@ -43,12 +49,7 @@ Your (personal developer) AWS credentials are used by Terraform to provision the
 
 The keys we'll be using can be found in the shared SpiderOak store. If you don't know what this is, ask @kltm.
 
-For testing purposes you can use your own ssh keys. But for production please ask for the graph agent ssh keys. The names will be:
-
-```
-ga-ssh.pub
-ga-ssh
-```
+For testing purposes you can use your own ssh keys. But for production please ask for the graph agent ssh keys. The names will be: "ga-ssh.pub" and "ga-ssh".
 
 ## Configuring and deploying EC2 _instances_ (and halo services)
 
@@ -57,14 +58,6 @@ ga-ssh
 ```bash
 docker rm ga-dev || true
 docker run --name ga-dev -it geneontology/go-devops-base:tools-jammy-0.4.4 /bin/bash
-```
-
-These next commands are from _within_ the docker image:
-
-```bash
-cd /tmp
-git clone https://github.com/monarch-initiative/graph-agent-devops.git
-cd graph-agent-devops/provision
 ```
 
 2. Copy in SSH keys
@@ -76,7 +69,32 @@ docker cp ga-ssh ga-dev:/tmp
 docker cp ga-ssh.pub ga-dev:/tmp
 ```
 
-You should now have the following in your image:
+From here, commands are from _within_ the docker image.
+
+3. Update Ansible
+
+Update to a more recent ansible (required as client python2.7 is no
+longer supported); basically: https://docs.ansible.com/ansible/latest/installation_guide/installation_distros.html#installing-ansible-on-ubuntu .
+
+(TODO: make new dev image to incorporate this.)
+
+```bash
+apt update && apt install software-properties-common && add-apt-repository --yes --update ppa:ansible/ansible && apt install ansible
+```
+
+4. Get the devops repo
+
+```bash
+cd /tmp
+git clone https://github.com/monarch-initiative/graph-agent-devops.git
+cd graph-agent-devops/provision
+```
+
+3. Establish the AWS credential files
+
+The next commands will be _within_ the devops docker image, within the `/tmp/graph-agent-devops/provision` directory.
+
+Note: you should now have the following in your image:
 
 ```bash
 /tmp/ga-ssh
@@ -88,10 +106,6 @@ Make sure they have the right perms to be used _within_ in the docker image:
 ```bash
 chmod 600 /tmp/ga-ssh*
 ```
-
-3. Establish the AWS credential files
-
-All commands here on out will be _within_ the devops docker image, within the `/tmp/graph-agent-devops/provision` directory.
 
 Copy and modify the AWS credential file to the default location `/tmp/ga-aws-credentials`.
 
@@ -115,7 +129,7 @@ For our current purposes, we will use a shared workspace backend with the name `
 cp ./production/backend.tf.sample ./aws/backend.tf
 ```
 
-This should be pre-filled as `ga-workspace`, but can be changed for reasons listed above.
+Optional. This should be pre-filled as `ga-workspace`, but can be changed for reasons listed above.
 
 ```bash
 emacs ./aws/backend.tf
@@ -127,14 +141,15 @@ Use the AWS CLI to make sure you have access to the Terraform S3 backend bucket:
 export AWS_SHARED_CREDENTIALS_FILE=/tmp/ga-aws-credentials
 ```
 
-Check credentials with a test connection to the S3 workspace backend
+Optional. Check credentials with a test connection to the S3 workspace backend
 bucket.
 
 ```bash
 aws s3 ls s3://ga-workspace
 ```
 
-Proceed with Terraform initialization; if it doesn't work, we fail):
+Proceed with Terraform initialization; if it doesn't work, we
+fail). This will connect the devops with the desired "backend":
 
 ```bash
 go-deploy -init --working-directory aws -verbose
@@ -256,6 +271,13 @@ Useful Terraform commands to check what you have just done
 terraform -chdir=aws workspace show   # current terraform workspace
 terraform -chdir=aws show             # current state deployed ...
 terraform -chdir=aws output           # shows public ip of aws instance
+```
+
+If doing fast iteration for development on mongo directly and you want to completely wipout the installation, running the ansible playbookd from partway through, this is a nice command in the EC2 instance:
+
+```bash
+sudo service mongod stop && sudo apt-get purge mongodb-org* && sudo rm -r /var/log/mongodb && sudo rm -r /var/lib/mongodb && sudo rm /tmp/mongodb-27017.sock
+
 ```
 
 ## Destroying instance and other destructive things
