@@ -144,7 +144,7 @@ Pipfile.lock
 .idea/
 
 
-# AWS Provisioning 
+# AWS Provisioning
 *.cfg
 *.tfvars.json
 config-instance.yaml
@@ -152,3 +152,41 @@ config-stack.yaml
 .terraform.lock.hcl
 .terraform/
 backend.tf
+
+## Emacs things (from
+## https://github.com/github/gitignore/blob/master/Global/Emacs.gitignore).
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+.elc
+auto-save-list
+tramp
+.\#*
+# Org-mode
+.org-id-locations
+*_archive
+
+## Devops-isms
+stage_dir
+.terraform
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+
+s3cfg
+backend.tf
+ga-ssh
+ga-ssh.pub
+go-ssh
+go-ssh.pub
+production-vars.txt
+config.yaml
+production-*.cfg
+production-*.tfvars.json
+config-instance.yaml
+config-stack.yaml
+amigo-hash
+
+.idea
+.env
