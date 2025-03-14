@@ -34,14 +34,6 @@
   shell: systemctl start mongod
 - name: feed in admin creation command
   shell: mongosh < /tmp/initial-admin-command.js
-# - name: create admin
-#   community.mongodb.mongodb_user:
-#     database: admin
-#     name: bbopadmin
-#     password: "{{ mongodb_cli_password }}"
-#     roles: root
-#     login_host: 127.0.0.1
-#     login_port: 27017
 - name: stop mongo
   shell: systemctl stop mongod
 - name: get prod mongod.conf into place
