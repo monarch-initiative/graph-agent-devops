@@ -7,6 +7,7 @@
   with_items:
     - gnupg
     - curl
+    - python3-pymongo
 # - name: get mongo key
 #   shell: curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg --dearmor
 - name: get mongo key
