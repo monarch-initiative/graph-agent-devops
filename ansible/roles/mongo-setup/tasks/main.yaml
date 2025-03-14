@@ -27,14 +27,14 @@
   shell: systemctl daemon-reload
 - name: start mongo (has localhost exception by default)
   shell: systemctl start mongod
-- name: get command with secret into place
-  template: "src=initial-admin-command dest=/tmp/initial-admin-command owner=mongodb group=mongodb"
-- name: Run a file containing MongoDB admin commands
-  community.mongodb.mongodb_shell:
-    #login_user: user
-    #login_password: secret
-    file: "/tmp/initial-admin-command"
-    #idempotent: yes
+- name: create admin
+  community.mongodb.mongodb_user:
+    database: admin
+    name: bbopadmin
+    password: "{{ mongodb_cli_password }}"
+    roles: root
+    login_host: 127.0.0.1
+    login_port: 27017
 - name: stop mongo
   shell: systemctl stop mongod
 - name: get prod mongod.conf into place
