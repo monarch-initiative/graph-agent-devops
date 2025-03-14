@@ -26,16 +26,20 @@
   shell: systemctl enable mongod
 - name: refresh daemon
   shell: systemctl daemon-reload
+- name: get command with secret into place
+  template: "src=initial-admin-command dest=/tmp/initial-admin-command.js owner=mongodb group=mongodb"
 - name: start mongo (has localhost exception by default)
   shell: systemctl start mongod
-- name: create admin
-  community.mongodb.mongodb_user:
-    database: admin
-    name: bbopadmin
-    password: "{{ mongodb_cli_password }}"
-    roles: root
-    login_host: 127.0.0.1
-    login_port: 27017
+# - name: feed in admin creation command
+#   shell:
+# - name: create admin
+#   community.mongodb.mongodb_user:
+#     database: admin
+#     name: bbopadmin
+#     password: "{{ mongodb_cli_password }}"
+#     roles: root
+#     login_host: 127.0.0.1
+#     login_port: 27017
 - name: stop mongo
   shell: systemctl stop mongod
 - name: get prod mongod.conf into place
