@@ -18,6 +18,8 @@
   shell: echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu noble/mongodb-org/8.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-8.0.list
 - name: apt-get update
   apt: update_cache=yes
+#- name: fully reset mongo for idempotency
+#  shell: service mongod stop && apt-get -y purge mongodb-org* && rm -r /var/log/mongodb && rm -r /var/lib/mongodb && rm /tmp/mongodb-27017.sock
 - name: get mongo
   apt: pkg={{ item }} state=present
   with_items:
@@ -30,8 +32,8 @@
   template: "src=initial-admin-command dest=/tmp/initial-admin-command.js owner=mongodb group=mongodb"
 - name: start mongo (has localhost exception by default)
   shell: systemctl start mongod
-# - name: feed in admin creation command
-#   shell:
+- name: feed in admin creation command
+  shell: mongosh < /tmp/initial-admin-command.js
 # - name: create admin
 #   community.mongodb.mongodb_user:
 #     database: admin
