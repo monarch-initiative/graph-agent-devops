@@ -74,7 +74,7 @@ From here, commands are from _within_ the docker image.
 3. Update Ansible
 
 Update to a more recent ansible (required as client python2.7 is no
-longer supported); basically: https://docs.ansible.com/ansible/latest/installation_guide/installation_distros.html#installing-ansible-on-ubuntu .
+longer supported); basically: https://docs.ansible.com/ansible/latest/installation_guide/installation_distros.html#installing-ansible-on-ubuntu . Accept the chenges when asked (Y).
 
 (TODO: make new dev image to incorporate this.)
 
@@ -94,12 +94,7 @@ cd graph-agent-devops/provision
 
 The next commands will be _within_ the devops docker image, within the `/tmp/graph-agent-devops/provision` directory.
 
-Note: you should now have the following in your image:
-
-```bash
-/tmp/ga-ssh
-/tmp/ga-ssh.pub
-```
+Note: you should now have the following in your image already from the instructions above: "/tmp/ga-ssh" and "/tmp/ga-ssh.pub".
 
 Make sure they have the right perms to be used _within_ in the docker image:
 
@@ -230,6 +225,11 @@ Access graph-agent-devops instance from the CLI by ssh'ing into the newly provis
 ```bash
 ssh -i /tmp/ga-ssh ubuntu@IP_ADDRESS
 ```
+
+## Note
+
+Here is where you go to AWS security settings and finalize machine
+access. For example, check and change created security group.
 
 ## Software installation
 
