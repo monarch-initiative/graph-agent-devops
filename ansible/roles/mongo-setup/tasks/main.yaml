@@ -8,12 +8,12 @@
     - gnupg
     - curl
     - python3-pymongo
-# - name: get mongo key
-#   shell: curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg --dearmor
-- name: get mongo key
-  ansible.builtin.apt_key:
-    url: https://www.mongodb.org/static/pgp/server-8.0.asc
-    state: present
+- name: get mongo key (1)
+  shell: curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg --dearmor
+# - name: get mongo key (2)
+#   ansible.builtin.apt_key:
+#     url: https://www.mongodb.org/static/pgp/server-8.0.asc
+#     state: present
 - name: add source
   shell: echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu noble/mongodb-org/8.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-8.0.list
 - name: apt-get update
