@@ -10,13 +10,14 @@ instance:
 
     # Set the fqdn if you want the record to be created  and make sure you have the right zone id. (See AWS console)
     # The created record will be of type A and will be populated with the public ip address of the aws instance
-    dns_record_name: "ga-production-REPLACE_ME_WITH_DATE.curategpt.io"
-    # For curategpt.io
-    dns_zone_id: "Z05698141GO0UMS9STF8P"
+    dns_record_name: "ga-production-REPLACE_ME_WITH_DATE.alzassistant.org"
+    # For alzassistant.org
+    dns_zone_id: "Z0360085QVDCSR47303F"
 
     disk_size: 200
     open_ports:
        - 80
        - 22
        - 443
+       - 8501
        - 27017
