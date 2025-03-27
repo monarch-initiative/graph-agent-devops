@@ -1,0 +1,25 @@
+####
+#### Setup curategpt
+####
+---
+- name: apt-get update && apt-get dist-upgrade
+  apt: update_cache=yes upgrade=dist
+- name: install main packages
+  apt: pkg={{ item }} state=present
+  with_items:
+    - git
+    - build-essentials
+    - python3-dev
+    - python3-poetry
+    - net-tools
+- name: clear directory
+  file:
+    state: absent
+    path: "/home/ubuntu/curategpt"
+- name: get the curategpt repo
+  git: "repo=https://github.com/monarch-initiative/curategpt.git dest=/home/ubuntu/curategpt"
+- name: poetry install
+  command: poetry install
+  become_user: "ubuntu"
+  args:
+    chdir: "/home/ubuntu/curategpt"
