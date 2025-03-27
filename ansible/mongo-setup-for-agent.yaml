@@ -12,6 +12,8 @@
   roles:
     ## Package substrait.
     - standard-distribution-noble
-    ## Package substrait.
+    ## Package mongodb setup.
     - role: mongo-setup
       mongodb_cli_password: "{{ mongodb_cli_password }}"
+    ## Install curategpt.
+    - curategpt
