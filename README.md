@@ -231,7 +231,7 @@ ssh -i /tmp/ga-ssh ubuntu@IP_ADDRESS
 Here is where you go to AWS security settings and finalize machine
 access. For example, check and change created security group.
 
-## Software installation
+## Software installation for MongoDB
 
 ```bash
 cd ../ansible
@@ -247,6 +247,24 @@ Replacing BBOP\_HIDDEN\_TEXT with the appropriate text, setup software with:
 
 ```bash
 ansible-playbook mongo-setup-for-agent.yaml --inventory=hosts --private-key="/tmp/ga-ssh" -e mongodb_cli_password=BBOP_HIDDEN_TEXT
+```
+
+## Software installation for CurateGPT
+
+```bash
+cd ../ansible
+```
+
+In `hosts`, replace `REPLACE_ME_WITH_IP` with the IP address of your new instalce from above.
+
+```bash
+emacs hosts
+```
+
+Then:
+
+```bash
+ansible-playbook curategpt-setup-for-agent.yaml --inventory=hosts --private-key="/tmp/ga-ssh"
 ```
 
 ## Troubleshooting
