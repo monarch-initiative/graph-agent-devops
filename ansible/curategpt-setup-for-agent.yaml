@@ -12,3 +12,11 @@
   roles:
     ## Install curategpt.
     - curategpt
+    ## Base webserver.
+    - webserver-apache
+    ## Proxies back to the webservers on port.
+    - role: webserver-apache-proxy
+      mapping_host: alzassistant.org
+      mapping_from_port: 80
+      mapping_to_port: 8501
+      apache_proxy_additional_rules: ""
