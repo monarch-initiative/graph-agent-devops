@@ -1,5 +1,5 @@
 ####
-#### Install Mongo and setup necessities.
+#### Install CurateGPT, setup apache proxy.
 ####
 #### This playbook is for Ubuntu 24.04 LTS.
 ####
@@ -10,8 +10,5 @@
   remote_user: "{{ target_user | default('ubuntu') }}"
   become: yes
   roles:
-    ## Package substrait.
-    - standard-distribution-noble
-    ## Package mongodb setup.
-    - role: mongo-setup
-      mongodb_cli_password: "{{ mongodb_cli_password }}"
+    ## Install curategpt.
+    - curategpt
