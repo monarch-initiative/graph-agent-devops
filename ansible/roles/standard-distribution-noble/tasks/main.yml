@@ -19,6 +19,7 @@
     - software-properties-common
     - apt-transport-https
     - build-essential
+    - mg
     ## Odds and ends utilities.
     - apt-show-versions
     - byobu
