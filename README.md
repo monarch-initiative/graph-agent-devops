@@ -267,6 +267,12 @@ Then:
 ansible-playbook curategpt-setup-for-agent.yaml --inventory=hosts --private-key="/tmp/ga-ssh"
 ```
 
+This can be tested with:
+
+```bash
+make app
+```
+
 ## Troubleshooting
 
 These commands will produce an IP address in the resulting `inventory.json` file.
@@ -296,6 +302,14 @@ If doing fast iteration for development on mongo directly and you want to comple
 ```bash
 sudo service mongod stop && sudo apt-get purge mongodb-org* && sudo rm -r /var/log/mongodb && sudo rm -r /var/lib/mongodb && sudo rm /tmp/mongodb-27017.sock
 
+```
+
+Rejoining devops image (when network has bonked out):
+
+```bash
+docker container start ga-dev
+docker exec -it ga-dev bash -c "/bin/bash"
+cd /tmp/graph-agent-devops/provision
 ```
 
 ## Destroying instance and other destructive things
