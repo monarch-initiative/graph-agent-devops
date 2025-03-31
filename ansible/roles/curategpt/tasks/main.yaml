@@ -16,6 +16,7 @@
   file:
     state: absent
     path: "/home/ubuntu/curategpt"
+  become_user: "ubuntu"
 - name: get the curategpt repo
   git: "repo=https://github.com/monarch-initiative/curategpt.git dest=/home/ubuntu/curategpt"
 - name: poetry install
