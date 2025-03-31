@@ -19,4 +19,4 @@
       mapping_host: alzassistant.org
       mapping_from_port: 80
       mapping_to_port: 8501
-      apache_proxy_additional_rules: ""
+      apache_proxy_additional_rules: "    RewriteEngine On\n    RewriteCond %{HTTP:Upgrade} websocket\n    RewriteRule /(.*) ws://localhost:8501/$1 [P]\n    RewriteCond %{HTTP:Upgrade} !websocket\n    RewriteRule /(.*) http://localhost:8501/$1 [P]\n"
