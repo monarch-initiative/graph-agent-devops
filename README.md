@@ -273,7 +273,25 @@ We are most of the way there, but the following things still need to be done; th
 
 - `sudo a2dissite 000-default`
 - The `curategpt` directory may be owned by root; `sudo chmod -R curategpt && sudo chgrp -r curategpt`
-- To run, start `byobu` and run the command(s): TODO
+- To run, start `byobu` and run the command(s):
+```
+# find the appropriate OpenAI API key and put it in ~/openai.key.kgalz
+
+# index the corpus of interest using paperqa. Currently the corpus of interest is
+# Bateman_LLM_360 - it's here (but you'll need permission from WUSTL, maybe from Kaleigh (robertsk@wustl.edu)
+# https://app.box.com/folder/318178609560?tc=collab-folder-invite-treatment-b
+# put the corpus here /home/ubuntu/curategpt/data/Bateman_LLM_360
+
+# index it with paperqa
+pqa index /home/ubuntu/curategpt/data/Bateman_LLM_360
+```
+
+Now start the server:
+
+```
+PQA_HOME=/home/ubuntu/curategpt/data/Bateman_LLM_360/ OPENAI_API_KEY=`cat ~/openai.key.kgalz` make app-alz
+```
+This will start the alzassistant streamlit app, possibly on port 5801
 
 ## Troubleshooting
 
