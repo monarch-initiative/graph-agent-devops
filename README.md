@@ -272,6 +272,9 @@ ansible-playbook curategpt-setup-for-agent.yaml --inventory=hosts --private-key=
 We are most of the way there, but the following things still need to be done; these should be baked in to a future iteration:
 
 - `sudo a2dissite 000-default`
+- `sudo apt-get -u install pipx unzip`
+- `pipx ensurepath` <- note that it's not `sudo`
+- `sudo pipx install paper-qa`
 - The `curategpt` directory may be owned by root; `sudo chmod -R curategpt && sudo chgrp -r curategpt`
 - To run, start `byobu` and run the command(s):
 ```
