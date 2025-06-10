@@ -275,6 +275,11 @@ make app
 
 ## Troubleshooting
 
+- The `curategpt` directory may be owned by root; `sudo chmod -R curategpt && sudo chgrp -r curategpt`
+- To run, start `byobu` and run the command(s): TODO
+
+## Troubleshooting
+
 These commands will produce an IP address in the resulting `inventory.json` file.
 The previous command creates Terraform "tfvars". These variables override the variables in `aws/main.tf`
 
