@@ -19,8 +19,8 @@
   become_user: "ubuntu"
 - name: get the curategpt repo
   git: "repo=https://github.com/monarch-initiative/curategpt.git dest=/home/ubuntu/curategpt"
-- name: poetry install
-  command: poetry install
+- name: poetry install --extras
+  command: poetry install --extras
   become_user: "ubuntu"
   args:
     chdir: "/home/ubuntu/curategpt"
