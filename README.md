@@ -267,14 +267,11 @@ Then:
 ansible-playbook curategpt-setup-for-agent.yaml --inventory=hosts --private-key="/tmp/ga-ssh"
 ```
 
-This can be tested with:
+## Spinning up the server
 
-```bash
-make app
-```
+We are most of the way there, but the following things still need to be done; these should be baked in to a future iteration:
 
-## Troubleshooting
-
+- `sudo a2dissite 000-default`
 - The `curategpt` directory may be owned by root; `sudo chmod -R curategpt && sudo chgrp -r curategpt`
 - To run, start `byobu` and run the command(s): TODO
 
