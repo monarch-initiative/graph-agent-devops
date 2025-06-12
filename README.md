@@ -333,6 +333,7 @@ Rejoining devops image (when network has bonked out):
 docker container start ga-dev
 docker exec -it ga-dev bash -c "/bin/bash"
 cd /tmp/graph-agent-devops/provision
+export AWS_SHARED_CREDENTIALS_FILE=/tmp/ga-aws-credentials
 ```
 
 ## Destroying instance and other destructive things
