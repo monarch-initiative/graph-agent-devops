@@ -271,12 +271,11 @@ ansible-playbook curategpt-setup-for-agent.yaml --inventory=hosts --private-key=
 
 We are most of the way there, but the following things still need to be done on the instance; these should be baked in to a future iteration of the ansible commands:
 
-- `sudo a2dissite 000-default`
-- `sudo apt-get -u install pipx unzip`
-- `pipx ensurepath` <- note that it's not `sudo`
-- `sudo pipx install paper-qa`
-- The `curategpt` directory may be owned by root; `sudo chown -R ubuntu curategpt && sudo chgrp -R ubuntu curategpt`
-- To run, start `byobu` and run the command(s):
+- `pipx install paper-qa`?
+- `pipx ensurepath`?
+
+To run, start `byobu` and run the command(s):
+
 ```
 # find the appropriate OpenAI API key and put it in ~/openai.key.kgalz
 

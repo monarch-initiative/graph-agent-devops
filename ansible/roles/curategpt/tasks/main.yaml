@@ -33,8 +33,13 @@
   become_user: "ubuntu"
   args:
     chdir: "/home/ubuntu/curategpt"
+# - name: pipx install paper-qa
+#   command: pipx install paper-qa
 - name: pipx install paper-qa
   command: pipx install paper-qa
+  become_user: "ubuntu"
+  args:
+    chdir: "/home/ubuntu/curategpt"
 - name: pipx ensurepath
   command: pipx ensurepath
   become_user: "ubuntu"
