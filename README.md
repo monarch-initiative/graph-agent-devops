@@ -293,7 +293,7 @@ Now start the server:
 ```
 PQA_HOME=/home/ubuntu/curategpt/data/Bateman_LLM_360/ OPENAI_API_KEY=`cat ~/openai.key.kgalz` make app-alz
 ```
-This will start the alzassistant streamlit app, possibly on port 5801
+This will start the alzassistant streamlit app, possibly on port 8501
 
 ## Troubleshooting
 
