@@ -231,24 +231,6 @@ ssh -i /tmp/ga-ssh ubuntu@IP_ADDRESS
 Here is where you go to AWS security settings and finalize machine
 access. For example, check and change created security group.
 
-## Software installation for MongoDB
-
-```bash
-cd ../ansible
-```
-
-In `hosts`, replace `REPLACE_ME_WITH_IP` with the IP address of your new instalce from above.
-
-```bash
-emacs hosts
-```
-
-Replacing BBOP\_HIDDEN\_TEXT with the appropriate text, setup software with:
-
-```bash
-ansible-playbook mongo-setup-for-agent.yaml --inventory=hosts --private-key="/tmp/ga-ssh" -e mongodb_cli_password=BBOP_HIDDEN_TEXT
-```
-
 ## Software installation for CurateGPT
 
 ```bash
@@ -361,4 +343,24 @@ Now delete the workspace.
 ```bash
 terraform -chdir=aws workspace select default # change to default workspace--cannot delete workspace that you are "in"
 terraform -chdir=aws workspace delete ga-production-YYYY-MM-DD
+```
+
+## Optional: Software installation for MongoDB
+
+Only add if necessary, due to security concerns.
+
+```bash
+cd ../ansible
+```
+
+In `hosts`, replace `REPLACE_ME_WITH_IP` with the IP address of your new instalce from above.
+
+```bash
+emacs hosts
+```
+
+Replacing BBOP\_HIDDEN\_TEXT with the appropriate text, setup software with:
+
+```bash
+ansible-playbook mongo-setup-for-agent.yaml --inventory=hosts --private-key="/tmp/ga-ssh" -e mongodb_cli_password=BBOP_HIDDEN_TEXT
 ```
